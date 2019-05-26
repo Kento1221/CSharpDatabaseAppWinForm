@@ -38,14 +38,16 @@
             this.homeButton = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.notificationController1 = new WindowsFormsApp1.Source.Controllers.NotificationController();
+            this.homeControl1 = new WindowsFormsApp1.Source.Controllers.HomeControl();
+            this.searchPersonControl1 = new WindowsFormsApp1.Source.Controllers.SearchPersonControl();
+            this.addPersonControl1 = new WindowsFormsApp1.Source.AddPersonController();
             this.button1 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.highlightPanel = new System.Windows.Forms.Panel();
-            this.homeControl1 = new WindowsFormsApp1.Source.Controllers.HomeControl();
-            this.searchPersonControl1 = new WindowsFormsApp1.Source.Controllers.SearchPersonControl();
-            this.addPersonControl1 = new WindowsFormsApp1.Source.AddPersonController();
+            this.notificationCountLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel1.SuspendLayout();
@@ -102,7 +104,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(187, 44);
             this.button3.TabIndex = 2;
-            this.button3.Text = "button3";
+            this.button3.Text = "Check workers";
             this.button3.UseVisualStyleBackColor = false;
             // 
             // button4
@@ -117,12 +119,12 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(187, 44);
             this.button4.TabIndex = 3;
-            this.button4.Text = "button4";
+            this.button4.Text = "Emmulate";
             this.button4.UseVisualStyleBackColor = false;
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
             this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -178,6 +180,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.notificationController1);
             this.panel1.Controls.Add(this.homeControl1);
             this.panel1.Controls.Add(this.searchPersonControl1);
             this.panel1.Controls.Add(this.addPersonControl1);
@@ -186,9 +189,46 @@
             this.panel1.Size = new System.Drawing.Size(608, 422);
             this.panel1.TabIndex = 16;
             // 
+            // notificationController1
+            // 
+            this.notificationController1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.notificationController1.Location = new System.Drawing.Point(3, 0);
+            this.notificationController1.Name = "notificationController1";
+            this.notificationController1.Size = new System.Drawing.Size(200, 120);
+            this.notificationController1.TabIndex = 23;
+            // 
+            // homeControl1
+            // 
+            this.homeControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.homeControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("homeControl1.BackgroundImage")));
+            this.homeControl1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.homeControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.homeControl1.Location = new System.Drawing.Point(0, 0);
+            this.homeControl1.Name = "homeControl1";
+            this.homeControl1.Size = new System.Drawing.Size(608, 422);
+            this.homeControl1.TabIndex = 0;
+            // 
+            // searchPersonControl1
+            // 
+            this.searchPersonControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.searchPersonControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.searchPersonControl1.Location = new System.Drawing.Point(0, 0);
+            this.searchPersonControl1.Name = "searchPersonControl1";
+            this.searchPersonControl1.Size = new System.Drawing.Size(608, 422);
+            this.searchPersonControl1.TabIndex = 2;
+            // 
+            // addPersonControl1
+            // 
+            this.addPersonControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.addPersonControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.addPersonControl1.Location = new System.Drawing.Point(0, 0);
+            this.addPersonControl1.Name = "addPersonControl1";
+            this.addPersonControl1.Size = new System.Drawing.Size(608, 422);
+            this.addPersonControl1.TabIndex = 1;
+            // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
             this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -205,7 +245,7 @@
             // 
             // button6
             // 
-            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
             this.button6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button6.BackgroundImage")));
             this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.button6.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -250,32 +290,17 @@
             this.highlightPanel.Size = new System.Drawing.Size(13, 44);
             this.highlightPanel.TabIndex = 14;
             // 
-            // homeControl1
+            // notificationCountLabel
             // 
-            this.homeControl1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.homeControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("homeControl1.BackgroundImage")));
-            this.homeControl1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.homeControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.homeControl1.Location = new System.Drawing.Point(0, 0);
-            this.homeControl1.Name = "homeControl1";
-            this.homeControl1.Size = new System.Drawing.Size(608, 422);
-            this.homeControl1.TabIndex = 0;
-            // 
-            // searchPersonControl1
-            // 
-            this.searchPersonControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.searchPersonControl1.Location = new System.Drawing.Point(0, 0);
-            this.searchPersonControl1.Name = "searchPersonControl1";
-            this.searchPersonControl1.Size = new System.Drawing.Size(608, 422);
-            this.searchPersonControl1.TabIndex = 2;
-            // 
-            // addPersonControl1
-            // 
-            this.addPersonControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.addPersonControl1.Location = new System.Drawing.Point(0, 0);
-            this.addPersonControl1.Name = "addPersonControl1";
-            this.addPersonControl1.Size = new System.Drawing.Size(608, 422);
-            this.addPersonControl1.TabIndex = 1;
+            this.notificationCountLabel.AutoSize = true;
+            this.notificationCountLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.notificationCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.notificationCountLabel.ForeColor = System.Drawing.Color.Red;
+            this.notificationCountLabel.Location = new System.Drawing.Point(225, 8);
+            this.notificationCountLabel.Name = "notificationCountLabel";
+            this.notificationCountLabel.Size = new System.Drawing.Size(9, 9);
+            this.notificationCountLabel.TabIndex = 22;
+            this.notificationCountLabel.Text = "1";
             // 
             // Menu
             // 
@@ -283,6 +308,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.notificationCountLabel);
             this.Controls.Add(this.showButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox3);
@@ -330,5 +356,7 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel highlightPanel;
+        private System.Windows.Forms.Label notificationCountLabel;
+        private Source.Controllers.NotificationController notificationController1;
     }
 }

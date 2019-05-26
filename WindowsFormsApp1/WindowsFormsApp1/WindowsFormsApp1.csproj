@@ -47,17 +47,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\interfaces\INotification.cs" />
+    <Compile Include="Source\ProblemNotification.cs" />
     <Compile Include="Source\Controllers\HomeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Source\Controllers\HomeControl.Designer.cs">
       <DependentUpon>HomeControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\Controllers\NotificationButton.cs">
+    <Compile Include="Source\Controllers\NotificationController.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Source\Controllers\NotificationButton.Designer.cs">
-      <DependentUpon>NotificationButton.cs</DependentUpon>
+    <Compile Include="Source\Controllers\NotificationController.Designer.cs">
+      <DependentUpon>NotificationController.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Controllers\SearchPersonControl.cs">
       <SubType>UserControl</SubType>
@@ -90,8 +92,8 @@
     <EmbeddedResource Include="Source\Controllers\HomeControl.resx">
       <DependentUpon>HomeControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\Controllers\NotificationButton.resx">
-      <DependentUpon>NotificationButton.cs</DependentUpon>
+    <EmbeddedResource Include="Source\Controllers\NotificationController.resx">
+      <DependentUpon>NotificationController.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\Controllers\SearchPersonControl.resx">
       <DependentUpon>SearchPersonControl.cs</DependentUpon>
@@ -129,7 +131,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Source\interfaces\" />
+    <Folder Include="Source\Files\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="icons\black\png\round_checkmark_icon&amp;16.png" />

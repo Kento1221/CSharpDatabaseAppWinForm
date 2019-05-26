@@ -13,6 +13,15 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             SwitchControls(homeControl1, homeButton);
+            if(notificationController1.getNotificationCount() == 0){
+                notificationCountLabel.Visible = false;
+            }
+            else if(notificationController1.getNotificationCount() >= 10)
+            {
+                notificationCountLabel.Text = "!!";
+            }
+            else
+                notificationCountLabel.Text = notificationController1.getNotificationCount()+"";
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -59,7 +68,16 @@ namespace WindowsFormsApp1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (notificationController1.Visible)
+            {
+                notificationController1.Hide();
 
+            }
+            else{
+                notificationController1.Show();
+                notificationController1.BringToFront();
+                notificationController1.Height = notificationController1.Label.Bottom + 10;
+            }
         }
     }
 }
