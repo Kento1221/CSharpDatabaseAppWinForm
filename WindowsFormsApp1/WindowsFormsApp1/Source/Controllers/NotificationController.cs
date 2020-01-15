@@ -1,72 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.Source.interfaces;
-using System.IO;
 
 namespace WindowsFormsApp1.Source.Controllers
 {
     public partial class NotificationController : UserControl
     {
 
-        private Queue<INotification> notifications = new Queue<INotification>();
-        private Dictionary<string, INotification> notificationType;
-        public Label Label;
-        private string filePath = @"..\..\Source\Files\nots.txt";
+        private Queue<INotification> q_notifications = new Queue<INotification>();
+        private Dictionary<string, INotification> dict_notificationType;
+        public Label lLabel;
+        private string s_filePath = @"..\..\Source\Files\nots.txt";
 
         public NotificationController()
         {
             InitializeComponent();
-            InitializeNotifications();
+            vInitializeNotifications();
             //CheckNotifications();
-            
-            if (notifications != null)
+
+            if (q_notifications != null)
             {
                 //TODO: Add blank notification to be an element of the List.
-                Label = bodyNotificationLabel;
+                lLabel = bodyNotificationLabel;
                 bodyNotificationLabel.Text = "You have no notifications.";
             }
 
             //WriteNotificationsToFile();
         }
 
-        private void InitializeNotifications()
+        private void vInitializeNotifications()
         {
-            notificationType = new Dictionary<string, INotification>();
+            dict_notificationType = new Dictionary<string, INotification>();
 
-            notificationType.Add("P", new ProblemNotification());
+            dict_notificationType.Add("P", new CProblemNotification());
         }
 
-        //TODO: Creates a file with notifications that are valid for the user. Also cleans all seen ones from the file.
-        private void CheckNotifications()
+        //TODO: Creates a file with notifications that are valid for the user. Also cleans all already-seen ones from the file.
+        private void vCheckNotifications()
         {
             if (!Directory.Exists(@"..\..\Source\Files"))
             {
                 Directory.CreateDirectory(@"..\..\Source\Files");
             }
-            if (!File.Exists(filePath))
+            if (!File.Exists(s_filePath))
             {
-                File.Create(filePath);
+                File.Create(s_filePath);
             }
 
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+            var fs_fileStream = new FileStream(s_filePath, FileMode.Open, FileAccess.ReadWrite);
+            using (var sr_streamReader = new StreamReader(fs_fileStream, Encoding.UTF8))
             {
-                string line;
-                while ((line = streamReader.ReadLine()) != null)
+                string s_line;
+                while ((s_line = sr_streamReader.ReadLine()) != null)
                 {
                     try
                     {
-                        string[] readline = line.Split(';');
-                        INotification notification = notificationType[readline[0]];
-                        notification.Notify(readline[1], readline[2]);
-                        notifications.Enqueue(notification);
+                        string[] ps_readline = s_line.Split(';');
+                        INotification in_notification = dict_notificationType[ps_readline[0]];
+                        in_notification.Notify(ps_readline[1], ps_readline[2]);
+                        q_notifications.Enqueue(in_notification);
                     }
                     catch (Exception ex)
                     {
@@ -75,25 +70,25 @@ namespace WindowsFormsApp1.Source.Controllers
                     }
                 }
             }
-            fileStream.Close();
+            fs_fileStream.Close();
         }
 
-        private void WriteNotificationsToFile()
+        private void vWriteNotificationsToFile()
         {
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Write );
+            FileStream fs_fileStream = new FileStream(s_filePath, FileMode.Open, FileAccess.Write);
 
-            var streamWriter = new StreamWriter(fileStream, Encoding.UTF8);
-            while(notifications.Count != 0)
+            var sw_streamWriter = new StreamWriter(fs_fileStream, Encoding.UTF8);
+            while (q_notifications.Count != 0)
             {
-                INotification notification = notifications.Dequeue();
-                streamWriter.WriteLine(notification.ToString());
+                INotification in_notification = q_notifications.Dequeue();
+                sw_streamWriter.WriteLine(in_notification.ToString());
             }
-            streamWriter.Close();
+            sw_streamWriter.Close();
         }
 
-        public int getNotificationCount()
+        public int iGetNotificationCount()
         {
-            return notifications.Count;
+            return q_notifications.Count;
         }
     }
 }

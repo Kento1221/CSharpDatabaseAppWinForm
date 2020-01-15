@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace WindowsFormsApp1.Source.Controllers
 {
     public partial class SearchPersonControl : UserControl
     {
-        private string[] parameters = { "@id", "@name", "@surname", "@city", "@sex" };
+        private string[] ps_parameters = { "@pracownicy_id", "@name", "@surname", "@city", "@sex" };
 
-        private DataTable dataTable;
-        private DataTable dataTableCopy;
+        private DataTable dt_dataTable;
+        private DataTable dt_dataTableCopy;
 
         public SearchPersonControl()
         {
@@ -25,31 +19,31 @@ namespace WindowsFormsApp1.Source.Controllers
 
         private void LoadAll_Click(object sender, EventArgs e)
         {
-            using (Connection connection = new Connection())
+            using (CConnection cc_connection = new CConnection())
             {
-                string query = "SELECT ID, NAME as Name, SURNAME as Surname, CITY as City, SEX as Sex FROM pracownicy";
-                MySqlCommand command = new MySqlCommand(query, connection.MySqlConnection);
-                PullAll(connection, command);
-            }
+                string s_query = "SELECT PRACOWNICY_ID as ID, NAME as Name, SURNAME as Surname, CITY as City, SEX as Sex FROM pracownicy";
+                MySqlCommand command = new MySqlCommand(s_query, cc_connection.MySqlConnection);
+                PullAll(cc_connection, command);
+            }//using (CConnection cc_connection = new CConnection())
         }
 
         private void Search_Click(object sender, EventArgs e)
         {
-            using (Connection connection = new Connection())
+            using (CConnection cc_connection = new CConnection())
             {
-                string query = "SELECT ID, NAME as Name, SURNAME as Surname, CITY as City, SEX as Sex FROM pracownicy WHERE (@id = \"\" OR ID = @id) AND " +
+                string s_query = "SELECT PRACOWNICY_ID as ID, NAME as Name, SURNAME as Surname, CITY as City, SEX as Sex FROM pracownicy WHERE (@pracownicy_id = \"\" OR PRACOWNICY_ID = @pracownicy_id) AND " +
                     "(@name = \"\" OR NAME = @name) AND " +
                     "(@surname = \"\" OR SURNAME = @surname) AND " +
                     "(@city = \"\" OR CITY = @city) AND " +
                     "(@sex IS NULL OR SEX = @sex);";
-                MySqlCommand command = new MySqlCommand(query, connection.MySqlConnection);
+                MySqlCommand command = new MySqlCommand(s_query, cc_connection.MySqlConnection);
                 command = GenerateParams(command);
                 foreach (MySqlParameter parameter in command.Parameters)
                 {
                     if (parameter.Value != (object)"" && parameter.Value != null)
-                        PullAll(connection, command);
-                }
-            }
+                        PullAll(cc_connection, command);
+                }//foreach (MySqlParameter parameter in command.Parameters)
+            }//using (CConnection cc_connection = new CConnection())
         }
 
         private void Clear_Click(object sender, EventArgs e)
@@ -62,46 +56,46 @@ namespace WindowsFormsApp1.Source.Controllers
             FemaleRadio.Checked = false;
         }
 
-        private void PullAll(Connection connection, MySqlCommand command)
+        private void PullAll(CConnection connection, MySqlCommand command)
         {
-            if (dataTable != null )
+            if (dt_dataTable != null)
             {
-                dataTable = null;
-                dataTableCopy = null;
+                dt_dataTable = null;
+                dt_dataTableCopy = null;
             }
 
-            connection.OpenConnection();
+            connection.vOpenConnection();
 
             try
             {
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 adapter.SelectCommand = command;
-                dataTable = new DataTable();
-                adapter.Fill(dataTable);
+                dt_dataTable = new DataTable();
+                adapter.Fill(dt_dataTable);
                 BindingSource bindingSource = new BindingSource();
 
-                bindingSource.DataSource = dataTable;
+                bindingSource.DataSource = dt_dataTable;
                 PracownicyGrid.DataSource = bindingSource;
-                adapter.Update(dataTable);
-                dataTableCopy = dataTable.Copy();
+                adapter.Update(dt_dataTable);
+                dt_dataTableCopy = dt_dataTable.Copy();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            connection.CloseConection();
+            connection.vCloseConection();
 
         }
 
-        private MySqlCommand GenerateParams(MySqlCommand cmd)
+        private MySqlCommand GenerateParams(MySqlCommand Cmd)
         {
-            foreach (string str in parameters)
+            foreach (string s_param in ps_parameters)
             {
                 MySqlParameter param = new MySqlParameter();
-                param.ParameterName = str;
-                switch (str)
+                param.ParameterName = s_param;
+                switch (s_param)
                 {
-                    case "@id":
+                    case "@pracownicy_id":
                         param.Value = IDBox.Text;
                         break;
                     case "@name":
@@ -121,87 +115,81 @@ namespace WindowsFormsApp1.Source.Controllers
                         break;
                     default:
                         break;
-                }
-                cmd.Parameters.Add(param);
-            }
-            return cmd;
+                }//switch (s_param)
+                Cmd.Parameters.Add(param);
+            }//foreach (string s_param in ps_parameters)
+            return Cmd;
         }
 
         private void editButton_Click(object sender, EventArgs e)
         {
-            using (Connection connection = new Connection())
+            using (CConnection cc_connection = new CConnection())
             {
-                if (dataTable != null && dataTableCopy != null)
-                    if (dataTable.Rows.Count == dataTableCopy.Rows.Count)
+                if (dt_dataTable != null && dt_dataTableCopy != null)
+                    if (dt_dataTable.Rows.Count == dt_dataTableCopy.Rows.Count)
                     {
-                        for (int row = 0; row < dataTable.Rows.Count; row++)
+                        for (int i_row = 0; i_row < dt_dataTable.Rows.Count; i_row++)
                         {
-                            for (int col = 0; col < dataTable.Columns.Count; col++)
+                            for (int i_col = 0; i_col < dt_dataTable.Columns.Count; i_col++)
                             {
                                 try
                                 {
-                                    if (!dataTable.Rows[row].ItemArray[col].Equals(dataTableCopy.Rows[row].ItemArray[col]))
+                                    if (!dt_dataTable.Rows[i_row].ItemArray[i_col].Equals(dt_dataTableCopy.Rows[i_row].ItemArray[i_col]))
                                     {
-                                        if (col == 0)
+                                        if (i_col == 0)
                                         {
                                             MessageBox.Show("ID doesn't match up. Try again, please! \nLoad all again if needed.");
                                             return;
                                         }
                                         //TODO: Make sure that you cannot edit the row's cells empty
-                                        string query = "UPDATE pracownicy SET NAME = \"" + dataTable.Rows[row].ItemArray[1] + "\", SURNAME = \"" + dataTable.Rows[row].ItemArray[2] + "\", CITY = \"" + dataTable.Rows[row].ItemArray[3] + "\", SEX = " + dataTable.Rows[row].ItemArray[4] + " WHERE ID = " + (int)dataTableCopy.Rows[row].ItemArray[0] + ";";
+                                        string s_query = "UPDATE pracownicy SET NAME = \"" + dt_dataTable.Rows[i_row].ItemArray[1] + "\", SURNAME = \"" + dt_dataTable.Rows[i_row].ItemArray[2] + "\", CITY = \"" + dt_dataTable.Rows[i_row].ItemArray[3] + "\", SEX = " + dt_dataTable.Rows[i_row].ItemArray[4] + " WHERE PRACOWNICY_ID = " + (int)dt_dataTableCopy.Rows[i_row].ItemArray[0] + ";";
 
-                                        var cmd = new MySqlCommand(query, connection.MySqlConnection);
+                                        MySqlCommand cmd = new MySqlCommand(s_query, cc_connection.MySqlConnection);
 
-                                        connection.OpenConnection();
+                                        cc_connection.vOpenConnection();
                                         cmd.ExecuteNonQuery();
-                                        connection.CloseConection();
+                                        cc_connection.vCloseConection();
 
-                                    }
+                                    }//if (!dt_dataTable.Rows[i_row].ItemArray[i_col].Equals(dt_dataTableCopy.Rows[i_row].ItemArray[i_col]))
                                 }
                                 catch (Exception)
                                 {
                                     MessageBox.Show("A row has been deleted incorrectly. \nTo delete a row use the delete button. \nPlease try again.");
                                     return;
                                 }
-
-
-                            }
-                        }
-                    }
-            }
-
+                            }//for (int i_col = 0; i_col < dt_dataTable.Columns.Count; i_col++)
+                        }//for (int i_row = 0; i_row < dt_dataTable.Rows.Count; i_row++)
+                    }//if (dt_dataTable.Rows.Count == dt_dataTableCopy.Rows.Count)
+            }//using (CConnection cc_connection = new CConnection())
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
             if (PracownicyGrid.SelectedRows.Count > 0)
             {
-                Connection connection = new Connection();
+                CConnection cc_connection = new CConnection();
 
-                DialogResult result = MessageBox.Show("Are you sure you want to delete "+ PracownicyGrid.SelectedRows.Count + " row(s) from the table and database permanently?", "Delete selected row(s)?", MessageBoxButtons.YesNo);
+                DialogResult dr_result = MessageBox.Show("Are you sure you want to delete " + PracownicyGrid.SelectedRows.Count + " row(s) from the table and database permanently?", "Delete selected row(s)?", MessageBoxButtons.YesNo);
 
-                if(result == DialogResult.Yes)
-                    foreach (DataGridViewCell selectedCell in PracownicyGrid.SelectedCells)
+                if (dr_result == DialogResult.Yes)
+                    foreach (DataGridViewCell dgvc_selectedCell in PracownicyGrid.SelectedCells)
                     {
-                        if (selectedCell.Selected)
+                        if (dgvc_selectedCell.Selected)
                         {
-                            var query = "DELETE FROM pracownicy WHERE ID = " + selectedCell.Value + ";";
-                            try { PracownicyGrid.Rows.RemoveAt(selectedCell.RowIndex); }
+                            string s_query = "DELETE FROM pracownicy WHERE PRACOWNICY_ID = " + dgvc_selectedCell.Value + ";";
+                            try { PracownicyGrid.Rows.RemoveAt(dgvc_selectedCell.RowIndex); }
                             catch (Exception) { MessageBox.Show("Make sure you select only existing rows."); break; }
 
-                            MySqlCommand cmd = new MySqlCommand(query, connection.MySqlConnection);
+                            MySqlCommand cmd = new MySqlCommand(s_query, cc_connection.MySqlConnection);
 
-                            connection.OpenConnection();
+                            cc_connection.vOpenConnection();
                             try { cmd.ExecuteNonQuery(); }
                             catch (Exception) { return; }
-                            connection.CloseConection();
-
-
-
-                        }
-                    }
-                    dataTable.Clear();
-            }
+                            cc_connection.vCloseConection();
+                        }//if (dgvc_selectedCell.Selected)
+                    }//foreach (DataGridViewCell dgvc_selectedCell in PracownicyGrid.SelectedCells)
+                dt_dataTable.Clear();
+            }//if (PracownicyGrid.SelectedRows.Count > 0)
         }
     }
 }

@@ -1,20 +1,20 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace WindowsFormsApp1.Source
 {
     public partial class AddPersonController : UserControl
     {
         private const string EMPTY = "";
-        
-        private DataTable dataTable;
+
+        private DataTable dt_dataTable;
 
         public AddPersonController()
         {
             InitializeComponent();
-            InitializeDataTable();
+            vInitializeDataTable();
             errorLabel1.Hide();
         }
 
@@ -22,59 +22,63 @@ namespace WindowsFormsApp1.Source
         {
             if (nameBox.Text != EMPTY && surnameBox.Text != EMPTY && cityBox.Text != EMPTY && (maleRadio.Checked || femaleRadio.Checked))
             {
-                dataTable.Rows.Add(nameBox.Text, surnameBox.Text, cityBox.Text, maleRadio.Checked);
-                ClearInput();
+                dt_dataTable.Rows.Add(nameBox.Text, surnameBox.Text, cityBox.Text, maleRadio.Checked);
+                vClearInput();
                 errorLabel1.Visible = false;
-            }
-            else{ errorLabel1.Visible = true; }
+            }//if
+            else { errorLabel1.Visible = true; }
         }
 
         private void enterButton_Click(object sender, EventArgs e)
         {
-            if (dataTable.Rows.Count > 0)
+            if (dt_dataTable.Rows.Count > 0)
             {
-                int count = dataTable.Rows.Count;
-                using (Connection connection = new Connection())
+                int i_count = dt_dataTable.Rows.Count;
+
+                using (CConnection cc_connection = new CConnection())
                 {
-                    foreach (DataRow row in dataTable.Rows)
+                    foreach (DataRow dr_row in dt_dataTable.Rows)
                     {
-                        bool isComplete = true;
-                        for (short i = 0; i < dataTable.Columns.Count; i++)
+                        bool b_isComplete = true;
+                        for (short ii = 0; ii < dt_dataTable.Columns.Count; ii++)
                         {
-                            if (row[i].ToString() == "" || row[i] == null)
+                            if (dr_row[ii].ToString() == "" || dr_row[ii] == null)
                             {
-                                isComplete = false;
-                                count--;
+                                b_isComplete = false;
+                                i_count--;
                                 break;
                             }
-                        }
+                        }//for (short ii = 0; ii < dt_dataTable.Columns.Count; ii++)
 
-                        if (isComplete)
+                        if (b_isComplete)
                         {
-                            string query = "INSERT INTO pracownicy (NAME, SURNAME, CITY, SEX) VALUES (\"" + row[0].ToString() + "\",\"" + row[1].ToString() + "\",\"" + row[2].ToString() + "\"," + row[3].ToString() + ");";
-                            MySqlCommand command = new MySqlCommand(query, connection.MySqlConnection);
+                            string s_query = "INSERT INTO pracownicy (NAME, SURNAME, CITY, SEX) VALUES (\"" + dr_row[0].ToString() + "\",\"" + dr_row[1].ToString() + "\",\"" + dr_row[2].ToString() + "\"," + dr_row[3].ToString() + ");";
+                            MySqlCommand command = new MySqlCommand(s_query, cc_connection.MySqlConnection);
 
-                            connection.OpenConnection();
+                            cc_connection.vOpenConnection();
                             command.ExecuteNonQuery();
-                            connection.CloseConection();
-                        }
-                    }
-                }
+                            cc_connection.vCloseConection();
+                        }//if (b_isComplete)
+                    }//foreach (DataRow dr_row in dt_dataTable.Rows)
+                }//using (CConnection cc_connection = new CConnection())
 
                 try
                 {
-                    dataTable.Rows.Clear();
+                    dt_dataTable.Rows.Clear();
                 }
                 catch (InvalidConstraintException ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
-                MessageBox.Show(count + " row(s) added!");
+                MessageBox.Show(i_count + " row(s) added!");
+            }//if (dt_dataTable.Rows.Count > 0)
+            else
+            {
+                MessageBox.Show("There is no records to enter into the database.");
             }
-            else{ MessageBox.Show("There is no records to enter into the database."); }
         }
 
-        private void ClearInput()
+        private void vClearInput()
         {
             nameBox.Clear();
             surnameBox.Clear();
@@ -83,19 +87,19 @@ namespace WindowsFormsApp1.Source
             femaleRadio.Checked = false;
         }
 
-        private void InitializeDataTable()
+        private void vInitializeDataTable()
         {
-            string[] collumns = { "Name", "Surname", "City", "Sex" };
-            Type[] types = { typeof(string), typeof(string), typeof(string), typeof(bool) };
+            string[] ps_collumns = { "Name", "Surname", "City", "Sex" };
+            Type[] pt_types = { typeof(string), typeof(string), typeof(string), typeof(bool) };
 
-            dataTable = new DataTable();
+            dt_dataTable = new DataTable();
 
-            for (int i = 0; i < collumns.Length; i++)
-                dataTable.Columns.Add(collumns[i], types[i]);
+            for (int ii = 0; ii < ps_collumns.Length; ii++)
+                dt_dataTable.Columns.Add(ps_collumns[ii], pt_types[ii]);
 
-            BindingSource bindingSource = new BindingSource();
-            bindingSource.DataSource = dataTable;
-            dataGridView1.DataSource = bindingSource;
+            BindingSource bs_bindingSource = new BindingSource();
+            bs_bindingSource.DataSource = dt_dataTable;
+            dataGridView1.DataSource = bs_bindingSource;
         }
     }
 }

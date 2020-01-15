@@ -1,59 +1,61 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WindowsFormsApp1.Source;
 
 namespace WindowsFormsApp1
 {
-    public partial class Menu : Form
+    public partial class CMenu : Form
     {
-        private UserControl activeControl = null;
-        private Button activeButton = null;
-
-        public Menu()
+        private UserControl uc_activeControl = null;
+        private Button bu_activeButton = null;
+        public CMenu()
         {
             InitializeComponent();
-            SwitchControls(homeControl1, homeButton);
-            if(notificationController1.getNotificationCount() == 0){
+            vSwitchControls(homeControl1, homeButton);
+            label2.Text = CUserInfo.sGetUser(0) + " " + CUserInfo.sGetUser(1);
+            if (notificationController1.iGetNotificationCount() == 0)
+            {
                 notificationCountLabel.Visible = false;
             }
-            else if(notificationController1.getNotificationCount() >= 10)
+            else if (notificationController1.iGetNotificationCount() >= 10)
             {
                 notificationCountLabel.Text = "!!";
             }
             else
-                notificationCountLabel.Text = notificationController1.getNotificationCount()+"";
+                notificationCountLabel.Text = notificationController1.iGetNotificationCount() + "";
         }
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            SwitchControls(addPersonControl1, addButton);
+            vSwitchControls(addPersonControl1, addButton);
         }
 
         private void showButton_Click(object sender, EventArgs e)
         {
-            SwitchControls(searchPersonControl1, showButton);
+            vSwitchControls(searchPersonControl1, showButton);
         }
 
-        private void SwitchControls(UserControl control, Button button)
+        private void vSwitchControls(UserControl ucControl, Button buButton)
         {
-            if(activeControl == null)
+            if (uc_activeControl == null)
             {
-                activeControl = control;
-                activeControl.BringToFront();
-                activeButton = button;
+                uc_activeControl = ucControl;
+                uc_activeControl.BringToFront();
+                bu_activeButton = buButton;
             }
-            else if(control != activeControl)
+            else if (ucControl != uc_activeControl)
             {
-                activeButton.BackColor = Color.FromArgb(30, 30, 30);
-                activeButton = button;
-                activeControl.SendToBack();
-                activeControl = control;
-                activeControl.BringToFront();
+                bu_activeButton.BackColor = Color.FromArgb(30, 30, 30);
+                bu_activeButton = buButton;
+                uc_activeControl.SendToBack();
+                uc_activeControl = ucControl;
+                uc_activeControl.BringToFront();
             }
 
-            activeButton.BackColor = Color.FromArgb(40, 40, 40);
-            highlightPanel.Top = button.Top;
-            highlightPanel.Height = button.Height;
+            bu_activeButton.BackColor = Color.FromArgb(40, 40, 40);
+            highlightPanel.Top = buButton.Top;
+            highlightPanel.Height = buButton.Height;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -63,7 +65,7 @@ namespace WindowsFormsApp1
 
         private void homeButton_Click(object sender, EventArgs e)
         {
-            SwitchControls(homeControl1, homeButton);
+            vSwitchControls(homeControl1, homeButton);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -73,10 +75,11 @@ namespace WindowsFormsApp1
                 notificationController1.Hide();
 
             }
-            else{
+            else
+            {
                 notificationController1.Show();
                 notificationController1.BringToFront();
-                notificationController1.Height = notificationController1.Label.Bottom + 10;
+                notificationController1.Height = notificationController1.lLabel.Bottom + 10;
             }
         }
     }
