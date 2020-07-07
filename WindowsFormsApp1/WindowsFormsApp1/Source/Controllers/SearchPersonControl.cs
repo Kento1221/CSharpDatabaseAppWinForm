@@ -149,7 +149,6 @@ namespace WindowsFormsApp1.Source.Controllers
                                         cc_connection.vOpenConnection();
                                         cmd.ExecuteNonQuery();
                                         cc_connection.vCloseConection();
-
                                     }//if (!dt_dataTable.Rows[i_row].ItemArray[i_col].Equals(dt_dataTableCopy.Rows[i_row].ItemArray[i_col]))
                                 }
                                 catch (Exception)
@@ -159,6 +158,7 @@ namespace WindowsFormsApp1.Source.Controllers
                                 }
                             }//for (int i_col = 0; i_col < dt_dataTable.Columns.Count; i_col++)
                         }//for (int i_row = 0; i_row < dt_dataTable.Rows.Count; i_row++)
+                        DialogResult dr_result = MessageBox.Show("Changes have been saved.");
                     }//if (dt_dataTable.Rows.Count == dt_dataTableCopy.Rows.Count)
             }//using (CConnection cc_connection = new CConnection())
         }

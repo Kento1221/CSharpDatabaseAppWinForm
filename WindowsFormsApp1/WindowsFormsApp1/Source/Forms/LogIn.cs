@@ -89,7 +89,7 @@ namespace WindowsFormsApp1
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
 
 
-                s_query = "INSERT INTO users (USERNAME, PASS) VALUES (\"Jan\", \"Kowalski\")";
+                s_query = "INSERT INTO users (USERNAME, PASS) VALUES (\"Radosław\", \"Wójtowicz\")";
                 command.CommandText = s_query;
                 try { command.ExecuteNonQuery(); }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }

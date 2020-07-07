@@ -14,16 +14,7 @@ namespace WindowsFormsApp1
             InitializeComponent();
             vSwitchControls(homeControl1, homeButton);
             label2.Text = CUserInfo.sGetUser(0) + " " + CUserInfo.sGetUser(1);
-            if (notificationController1.iGetNotificationCount() == 0)
-            {
-                notificationCountLabel.Visible = false;
-            }
-            else if (notificationController1.iGetNotificationCount() >= 10)
-            {
-                notificationCountLabel.Text = "!!";
-            }
-            else
-                notificationCountLabel.Text = notificationController1.iGetNotificationCount() + "";
+          
         }
 
         private void addButton_Click(object sender, EventArgs e)
